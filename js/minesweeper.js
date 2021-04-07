@@ -172,33 +172,12 @@ function fillSurroundingBombs() {
 		for (var j = 0; j < this.board_length; j++) {
 			if (this.board[i][j] == "e") {
 				var no_surrounding_bombs = 0;
-				if (i > 0) {
-					if (this.board[i - 1][j] == "b") {
-						no_surrounding_bombs++;
+				for (var row = i - 1; row <= i + 1; row++) {
+					for (var column = j - 1; column <= j + 1; column++) {
+						if (row >= 0 && column >= 0  && row < this.board_length && column < this.board_length && this.board[row][column] == "b") {
+							no_surrounding_bombs++;
+						}
 					}
-					if (j < this.board_length - 1 && this.board[i - 1][j + 1] == "b") {
-						no_surrounding_bombs++;
-					}
-					if (j > 0 && this.board[i - 1][j - 1] == "b") {
-						no_surrounding_bombs++;
-					}
-				}
-				if (j > 0 && this.board[i][j - 1] == "b") {
-					no_surrounding_bombs++;
-				}
-				if (i < this.board_length - 1) {
-					if (j > 0 && this.board[i + 1][j - 1] == "b") {
-						no_surrounding_bombs++;
-					}
-					if (j < this.board_length - 1 && this.board[i + 1][j + 1] == "b") {
-						no_surrounding_bombs++;
-					}
-					if (this.board[i + 1][j] == "b") {
-						no_surrounding_bombs++;
-					}
-				}
-				if (j < this.board_length - 1 && this.board[i][j + 1] == "b") {
-					no_surrounding_bombs++;
 				}
 				if (no_surrounding_bombs) {
 					this.board[i][j] = no_surrounding_bombs;
@@ -209,7 +188,7 @@ function fillSurroundingBombs() {
 }
 
 function discoverCells(i, j) {
-	if (this.visited[i][j] == 0) {
+	if (i >= 0 && j >= 0  && i < this.board_length && j < this.board_length && this.visited[i][j] == 0) {
 		var button = document.getElementById(i.toString() + "," + j.toString());
 		if (this.board[i][j] != "e") {
 			button.innerHTML = this.board[i][j];
@@ -219,29 +198,10 @@ function discoverCells(i, j) {
 		this.visited[i][j] = 1;
 		this.discoveredCells[i][j] = 1;
 		if (this.board[i][j] == "e") {
-			if (i > 0) {
-				discoverCells(i - 1, j);
-				if (j < this.board_length - 1) {
-					discoverCells(i - 1, j + 1);
+			for (var row = i - 1; row <= i + 1; row++) {
+				for (var column = j - 1; column <= j + 1; column++) {
+					discoverCells(row, column);
 				}
-				if (j > 0) {
-					discoverCells(i - 1, j - 1);
-				}
-			}
-			if (j > 0) {
-				discoverCells(i, j - 1);
-			}
-			if (j < this.board_length - 1) {
-				discoverCells(i, j + 1);
-			}
-			if (i < this.board_length - 1) {
-				if (j > 0) {
-					discoverCells(i + 1, j - 1);
-				}
-				if (j < this.board_length - 1) {
-					discoverCells(i + 1, j + 1);
-				}
-				discoverCells(i + 1, j);
 			}
 		}
 	}
